@@ -76,6 +76,9 @@ const elements: Elements = [
     href: '/docs/intro',
   },
 ]
+
+const lightsMode = ['light', 'dark']
+
 test.describe('Тесты главной страницы', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('https://playwright.dev/')
@@ -110,7 +113,7 @@ test.describe('Тесты главной страницы', () => {
     })
   })
 
-  test('Проверка переключения lightmode', async ({ page }) => {
+  test('Проверка переключения темы', async ({ page }) => {
     await page
       .getByRole('button', { name: 'Switch between dark and light' })
       .click()
@@ -118,5 +121,13 @@ test.describe('Тесты главной страницы', () => {
       .getByRole('button', { name: 'Switch between dark and light' })
       .click()
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  })
+  lightsMode.forEach((theme) => {
+    test(`Проверка переключения ${theme} mode`, async ({ page }) => {
+      await page.evaluate((theme) => {
+        document.querySelector('html')!.setAttribute('data-theme', theme)
+      }, theme)
+      await expect(page).toHaveScreenshot(`image-${theme}.png`)
+    })
   })
 })

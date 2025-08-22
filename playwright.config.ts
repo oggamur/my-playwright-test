@@ -13,6 +13,18 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './tests',
+  snapshotPathTemplate: '{testDir}/screenshots/{testFilePath}/{arg}{ext}',
+
+  // Assertion-specific templates
+  expect: {
+    toHaveScreenshot: {
+      pathTemplate:
+        '{testDir}/screenshots{/projectName}/{testFilePath}/{arg}{ext}',
+    },
+    toMatchAriaSnapshot: {
+      pathTemplate: '{testDir}/snapshots/{testFilePath}/{arg}{ext}',
+    },
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
